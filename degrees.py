@@ -154,12 +154,14 @@ def shortest_path(source, target):
         print(f"Time taken: {time_taken:.2f} seconds")
         print(f"\nDFS progress:")
         print(f"DFS had explored {dfs_nodes_explored} nodes when BFS found the solution, but hadn't found the path yet.")
+        print(f"\nFINAL PATH: {bfs_path}")
         return bfs_path
     elif dfs_path:
         print(f"\nPath found using DFS. Nodes explored by DFS: {dfs_nodes_explored}")
         print(f"Time taken: {time_taken:.2f} seconds")
         print(f"\nBFS progress:")
         print(f"BFS had explored {bfs_nodes_explored} nodes when DFS found the solution, but hadn't found the path yet.")
+        print(f"\nFINAL PATH: {dfs_path}")
         return dfs_path
     else:
         print(f"\nNo path found. BFS nodes explored: {bfs_nodes_explored}, DFS nodes explored: {dfs_nodes_explored}")
