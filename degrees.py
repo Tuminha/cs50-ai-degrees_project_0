@@ -74,16 +74,10 @@ def main():
     path = shortest_path(source, target)
 
     if path is None:
-        print("Not connected.")
+            print("Not connected.")
     else:
         degrees = len(path)
-        print(f"{degrees} degrees of separation.")
-        path = [(None, source)] + path
-        for i in range(degrees):
-            person1 = people[path[i][1]]["name"]
-            person2 = people[path[i + 1][1]]["name"]
-            movie = movies[path[i + 1][0]]["title"]
-            print(f"{i + 1}: {person1} and {person2} starred in {movie}")
+        print(f"\n{degrees} degrees of separation.")
 
 
 from alive_progress import alive_bar
@@ -154,14 +148,28 @@ def shortest_path(source, target):
         print(f"Time taken: {time_taken:.2f} seconds")
         print(f"\nDFS progress:")
         print(f"DFS had explored {dfs_nodes_explored} nodes when BFS found the solution, but hadn't found the path yet.")
-        print(f"\nFINAL PATH: {bfs_path}")
+        
+        print("\nFINAL PATH:")
+        for i, (movie_id, person_id) in enumerate(bfs_path, 1):
+            person1 = people[source]["name"] if i == 1 else people[bfs_path[i-2][1]]["name"]
+            person2 = people[person_id]["name"]
+            movie = movies[movie_id]["title"]
+            print(f"{i}: {person1} and {person2} starred in {movie}")
+        
         return bfs_path
     elif dfs_path:
         print(f"\nPath found using DFS. Nodes explored by DFS: {dfs_nodes_explored}")
         print(f"Time taken: {time_taken:.2f} seconds")
         print(f"\nBFS progress:")
         print(f"BFS had explored {bfs_nodes_explored} nodes when DFS found the solution, but hadn't found the path yet.")
-        print(f"\nFINAL PATH: {dfs_path}")
+        
+        print("\nFINAL PATH:")
+        for i, (movie_id, person_id) in enumerate(dfs_path, 1):
+            person1 = people[source]["name"] if i == 1 else people[dfs_path[i-2][1]]["name"]
+            person2 = people[person_id]["name"]
+            movie = movies[movie_id]["title"]
+            print(f"{i}: {person1} and {person2} starred in {movie}")
+        
         return dfs_path
     else:
         print(f"\nNo path found. BFS nodes explored: {bfs_nodes_explored}, DFS nodes explored: {dfs_nodes_explored}")

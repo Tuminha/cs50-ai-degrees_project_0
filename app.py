@@ -62,15 +62,12 @@ if st.button("🔍 Find Connection"):
                     
                     # Use st.expander to show the path
                     with st.expander("View Connection Path 📈"):
-                        path = [(None, source)] + path
-                        for i in range(degrees):
-                            person1 = people[path[i][1]]["name"]
-                            person2 = people[path[i + 1][1]]["name"]
-                            movie = movies[path[i + 1][0]]["title"]
-                            st.write(f"{i + 1}: {person1} and {person2} starred in {movie} 🎬")
-                        
-                        # Add the FINAL PATH information
-                        st.write(f"\nFINAL PATH: {path[1:]}")  # Exclude the first (None, source) pair
+                        st.write("FINAL PATH:")
+                        for i, (movie_id, person_id) in enumerate(path, 1):
+                            person1 = people[source]["name"] if i == 1 else people[path[i-2][1]]["name"]
+                            person2 = people[person_id]["name"]
+                            movie = movies[movie_id]["title"]
+                            st.write(f"{i}: {person1} and {person2} starred in {movie} 🎬")
                     
                     # Bar chart for visualizing the degrees of separation
                     st.bar_chart({
@@ -78,14 +75,20 @@ if st.button("🔍 Find Connection"):
                         "Maximum Degrees": 6  # Based on the "Six Degrees" theory
                     }, use_container_width=True)
 
-# Use st.feedback to gather user insights
-st.feedback(
-    feedback_type="thumbs",
-    key="feedback",
-    help="How satisfied are you with the search results? 👍👎",
-)
+# Replace the st.feedback section with this:
+st.write("How satisfied are you with the search results? 👍👎")
+col1, col2, col3 = st.columns(3)
+with col1:
+    if st.button("👍 Satisfied"):
+        st.success("Thank you for your positive feedback!")
+with col2:
+    if st.button("👎 Not Satisfied"):
+        st.error("We're sorry to hear that. We'll work on improving!")
+with col3:
+    if st.button("😐 Neutral"):
+        st.info("Thank you for your feedback!")
 
-# Add a fun fact using st.info instead of st.fragment
+# Keep the fun fact and footer as they are
 st.info("Did you know? The 'Six Degrees of Kevin Bacon' game was invented by three college students in 1994! 🎓")
 
 # Footer
