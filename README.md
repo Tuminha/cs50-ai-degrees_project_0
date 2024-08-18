@@ -1,6 +1,6 @@
-markdownCopy# 🎬 Six Degrees of Kevin Bacon 🎬
+# 🎬 Six Degrees of Kevin Bacon 🎬
 
-![Six Degrees of Kevin Bacon App](https://github.com/your-username/your-repo-name/raw/main/app_screenshot.png)
+![Six Degrees of Kevin Bacon App](/Users/franciscoteixeirabarbosa/Dropbox/Classes & Courses/CS50AI 2024 Harvard University/Class I- Search/Project/degrees/images/six_degrees_of_Kevin_Bacon.png)
 
 ## 📚 Table of Contents
 
