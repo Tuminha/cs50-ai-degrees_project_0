@@ -1,6 +1,6 @@
 # 🎬 Six Degrees of Kevin Bacon 🎬
 
-![Six Degrees of Kevin Bacon App](/Users/franciscoteixeirabarbosa/Dropbox/Classes & Courses/CS50AI 2024 Harvard University/Class I- Search/Project/degrees/images/six_degrees_of_Kevin_Bacon.png)
+![Six Degrees of Kevin Bacon App](https://github.com/Tuminha/cs50-ai-degrees_project_0/blob/main/images/six_degrees_of_Kevin_Bacon.png)
 
 ## 📚 Table of Contents
 
@@ -35,7 +35,7 @@ This project was developed as part of the CS50 Introduction to Artificial Intell
 To run this project locally, follow these steps:
 
 1. Clone the repository:
-git clone https://github.com/your-username/six-degrees-of-kevin-bacon.git
+git clone https://github.com/Tuminha/six-degrees-of-kevin-bacon.git
 cd six-degrees-of-kevin-bacon
 Copy
 2. Create a virtual environment (optional but recommended):
