@@ -21,6 +21,8 @@ The "Six Degrees of Kevin Bacon" project is an interactive web application that 
 
 This project was developed as part of the CS50 Introduction to Artificial Intelligence with Python course from Harvard University. It showcases the implementation of graph search algorithms (Breadth-First Search and Depth-First Search) to find connections in a complex network of actors and movies.
 
+![Example of Result in Streamlit App](https://github.com/Tuminha/cs50-ai-degrees_project_0/blob/main/images/example_of_result_in_streamlit_app.png)
+
 ## ✨ Features
 
 - Choose between small and large datasets of actors and movies
