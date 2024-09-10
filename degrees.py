@@ -1,7 +1,5 @@
 import csv
 import sys
-from alive_progress import alive_bar
-import time
 
 from util import Node, StackFrontier, QueueFrontier
 
@@ -55,6 +53,7 @@ def load_data(directory):
 
 
 def main():
+    # Check for correct number of command-line arguments
     if len(sys.argv) > 2:
         sys.exit("Usage: python degrees.py [directory]")
     directory = sys.argv[1] if len(sys.argv) == 2 else "large"
@@ -64,119 +63,78 @@ def main():
     load_data(directory)
     print("Data loaded.")
 
+    # Get the source actor's ID
     source = person_id_for_name(input("Name: "))
     if source is None:
         sys.exit("Person not found.")
+    
+    # Get the target actor's ID
     target = person_id_for_name(input("Name: "))
     if target is None:
         sys.exit("Person not found.")
 
+    # Find the shortest path between the source and target actors
     path = shortest_path(source, target)
 
+    # Print the result
     if path is None:
-            print("Not connected.")
+        print("Not connected.")
     else:
         degrees = len(path)
-        print(f"\n{degrees} degrees of separation.")
+        print(f"{degrees} degrees of separation.")
+        for i in range(degrees):
+            person1 = people[source]["name"]
+            person2 = people[path[i][1]]["name"]
+            movie = movies[path[i][0]]["title"]
+            print(f"{i + 1}: {person1} and {person2} starred in {movie}")
 
-
-from alive_progress import alive_bar
-import time
 
 def shortest_path(source, target):
-    print("Starting the shortest path search...")
+    """
+    Returns the shortest list of (movie_id, person_id) pairs
+    that connect the source to the target.
 
-    bfs_frontier = QueueFrontier()
-    dfs_frontier = StackFrontier()
-    
+    If no possible path, returns None.
+    """
+    # Initialize the frontier to just the starting position
     start = Node(state=source, parent=None, action=None)
-    bfs_frontier.add(start)
-    dfs_frontier.add(start)
+    frontier = QueueFrontier()
+    frontier.add(start)
+
+    # Initialize an empty explored set
+    explored = set()
+
+    # Keep looping until solution found
+    while not frontier.empty():
+        # Choose a node from the frontier
+        node = frontier.remove()
+
+        # If node is the goal, then we have a solution
+        if node.state == target:
+            path = []
+            while node.parent is not None:
+                path.append(node.action)
+                node = node.parent
+            path.reverse()
+            return path
+
+        # Mark node as explored
+        explored.add(node.state)
+
+        # Add neighbors to frontier
+        for movie_id, person_id in neighbors_for_person(node.state):
+            if not frontier.contains_state(person_id) and person_id not in explored:
+                child = Node(state=person_id, parent=node, action=(movie_id, person_id))
+                frontier.add(child)
     
-    bfs_explored = set()
-    dfs_explored = set()
-    
-    bfs_nodes_explored = 0
-    dfs_nodes_explored = 0
-    bfs_path = None
-    dfs_path = None
+    # If we exhaust the frontier, then no path was found
+    return None
 
-    start_time = time.time()
-
-    with alive_bar(title="Searching for path", unknown="waves2", spinner="dots_waves2") as bar:
-        while (not bfs_frontier.empty() or not dfs_frontier.empty()) and (bfs_path is None and dfs_path is None):
-            # BFS step
-            if not bfs_frontier.empty():
-                bfs_node = bfs_frontier.remove()
-                bfs_nodes_explored += 1
-                
-                if bfs_node.state == target:
-                    bfs_path = reconstruct_path(bfs_node)
-                    break
-                
-                bfs_explored.add(bfs_node.state)
-                
-                for movie_id, person_id in neighbors_for_person(bfs_node.state):
-                    if person_id not in bfs_explored and not bfs_frontier.contains_state(person_id):
-                        child = Node(state=person_id, parent=bfs_node, action=(movie_id, person_id))
-                        bfs_frontier.add(child)
-            
-            # DFS step
-            if not dfs_frontier.empty():
-                dfs_node = dfs_frontier.remove()
-                dfs_nodes_explored += 1
-                
-                if dfs_node.state == target:
-                    dfs_path = reconstruct_path(dfs_node)
-                    break
-                
-                dfs_explored.add(dfs_node.state)
-                
-                for movie_id, person_id in neighbors_for_person(dfs_node.state):
-                    if person_id not in dfs_explored and not dfs_frontier.contains_state(person_id):
-                        child = Node(state=person_id, parent=dfs_node, action=(movie_id, person_id))
-                        dfs_frontier.add(child)
-            
-            bar.text = f'BFS: {bfs_nodes_explored} nodes, DFS: {dfs_nodes_explored} nodes'
-            bar()
-
-    end_time = time.time()
-    time_taken = end_time - start_time
-
-    if bfs_path:
-        print(f"\nPath found using BFS. Nodes explored by BFS: {bfs_nodes_explored}")
-        print(f"Time taken: {time_taken:.2f} seconds")
-        print(f"\nDFS progress:")
-        print(f"DFS had explored {dfs_nodes_explored} nodes when BFS found the solution, but hadn't found the path yet.")
-        
-        print("\nFINAL PATH:")
-        for i, (movie_id, person_id) in enumerate(bfs_path, 1):
-            person1 = people[source]["name"] if i == 1 else people[bfs_path[i-2][1]]["name"]
-            person2 = people[person_id]["name"]
-            movie = movies[movie_id]["title"]
-            print(f"{i}: {person1} and {person2} starred in {movie}")
-        
-        return bfs_path
-    elif dfs_path:
-        print(f"\nPath found using DFS. Nodes explored by DFS: {dfs_nodes_explored}")
-        print(f"Time taken: {time_taken:.2f} seconds")
-        print(f"\nBFS progress:")
-        print(f"BFS had explored {bfs_nodes_explored} nodes when DFS found the solution, but hadn't found the path yet.")
-        
-        print("\nFINAL PATH:")
-        for i, (movie_id, person_id) in enumerate(dfs_path, 1):
-            person1 = people[source]["name"] if i == 1 else people[dfs_path[i-2][1]]["name"]
-            person2 = people[person_id]["name"]
-            movie = movies[movie_id]["title"]
-            print(f"{i}: {person1} and {person2} starred in {movie}")
-        
-        return dfs_path
-    else:
-        print(f"\nNo path found. BFS nodes explored: {bfs_nodes_explored}, DFS nodes explored: {dfs_nodes_explored}")
-        print(f"Time taken: {time_taken:.2f} seconds")
-        return None
 
 def reconstruct_path(node):
+    """
+    Reconstructs the path from the source to the target node.
+    """
     path = []
     while node.parent is not None:
         path.append(node.action)
